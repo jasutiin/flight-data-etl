@@ -9,3 +9,10 @@ the 3 visualizations above i got from claude, but lowkey i need to practice read
 - nothing so far
 
 using this btw: https://openskynetwork.github.io/opensky-api/rest.html
+
+how it works:
+- every hour, it runs the github action
+- `extract.py` calls any opensky api endpoint, calls them, and creates a new .csv for the response and adds the .csv to `data/`
+- `transform.py` takes the data and transforms it, adds it to `data-transformed/`
+- `load.py` takes each .csv and adds it to database
+- power bi does its visualization magic
