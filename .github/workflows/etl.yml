@@ -1,0 +1,65 @@
+name: ETL Pipeline
+
+on:
+  schedule:
+    - cron: '0 */1 * * *'  # every hr
+  workflow_dispatch:
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run extract
+        env:
+          OPENSKY_USERNAME: ${{ secrets.OPENSKY_USERNAME }}
+          OPENSKY_PASSWORD: ${{ secrets.OPENSKY_PASSWORD }}
+        run: python extract.py
+
+  transform:
+    needs: extract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run transform
+        run: python transform.py
+
+  load:
+    needs: transform
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run load
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: python load.py
