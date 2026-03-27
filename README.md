@@ -7,3 +7,5 @@ the visualizations i want to make:
 
 the 3 visualizations above i got from claude, but lowkey i need to practice reading data and seeing what i can derive from it so here's the stuff i came up with:
 - nothing so far
+
+using this btw: https://openskynetwork.github.io/opensky-api/rest.html
